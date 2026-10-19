@@ -1,0 +1,53 @@
+# KW-7 AI — демо-версия на 30 дней.
+#
+# Запуск:   docker compose up -d
+# Открыть:  http://localhost:8080
+#
+# Данные (база, файлы, ключ активации) лежат в томе kw7_data и переживают
+# обновление образа. Удалить всё вместе с данными: docker compose down -v
+
+services:
+  kw7:
+    image: ${KW7_IMAGE:-ghcr.io/kw-7lab/kw7-demo:2026.10.19}
+    restart: unless-stopped
+    ports:
+      - "${KW7_PORT:-8080}:8080"
+    environment:
+      KW_ADMIN_USER: admin
+      KW_ADMIN_PASSWORD: ${KW_ADMIN_PASSWORD:-}
+      KW_ACTIVATION_URL: ${KW7_ACTIVATION_URL:-https://kw-7.ru/api/demo-activation/}
+    volumes:
+      - kw7_data:/data
+    # Модель на этой же машине (Ollama, LM Studio) доступна как host.docker.internal —
+    # в Docker Desktop это имя есть всегда, на Linux его добавляет эта строка.
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    networks:
+      - default
+      - code-exec-net
+
+  # Исполнитель кода: код, написанный моделью, выполняется здесь, а не в основном
+  # контейнере. Сети наружу нет, файловая система только для чтения, привилегии
+  # сброшены, на каждый вызов — новый процесс.
+  code-executor:
+    image: ${KW7_EXECUTOR_IMAGE:-ghcr.io/kw-7lab/kw7-demo-executor:2026.10.19}
+    restart: unless-stopped
+    read_only: true
+    tmpfs:
+      - /tmp:rw,noexec,nosuid,size=64m
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true
+    mem_limit: 256m
+    cpus: 1.0
+    pids_limit: 64
+    networks:
+      - code-exec-net
+
+networks:
+  code-exec-net:
+    internal: true
+
+volumes:
+  kw7_data:
