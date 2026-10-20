@@ -1,10 +1,17 @@
 # KW-7 AI — демо-версия на 30 дней.
+# Инструкция: https://github.com/kw-7lab/ai.kw-7/blob/main/demo/README.md
 #
-# Запуск:   docker compose up -d
-# Открыть:  http://localhost:8080
+# Перед запуском: Windows — запустите Docker Desktop и дождитесь «Engine running».
 #
-# Данные (база, файлы, ключ активации) лежат в томе kw7_data и переживают
-# обновление образа. Удалить всё вместе с данными: docker compose down -v
+# Запуск:     docker compose up -d
+# Открыть:    http://localhost:8080
+# Другой порт: KW7_PORT=8090 docker compose up -d          (Linux)
+#              $env:KW7_PORT=8090; docker compose up -d    (PowerShell)
+#
+# Обновить:   docker compose pull && docker compose up -d   (данные сохраняются)
+# Удалить всё вместе с данными: docker compose down -v
+#
+# Ваши данные (база, файлы, активация) хранятся в томе kw7_data на этом компьютере.
 
 services:
   kw7:
