@@ -113,4 +113,5 @@ Lite, Corp, Global — от моделей и ПДн до полного кат�
 
 - Покупка, лицензии, пилот: **info@kw-7.ru**
 - Поддержка: **support@kw-7.ru**
+- Telegram: [@Vad_neld](https://t.me/Vad_neld)
 - Сайт: [kw-7.ru](https://kw-7.ru)
